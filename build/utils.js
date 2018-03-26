@@ -22,6 +22,13 @@ exports.cssLoaders = function (options) {
     }
   }
 
+  const sassLoader = {
+    loader: 'sass-loader',
+    options: {
+      sourceMap: options.sourceMap
+    }
+  }
+
   const postcssLoader = {
     loader: 'postcss-loader',
     options: {
