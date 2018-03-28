@@ -1,4 +1,8 @@
 import axios from 'axios'
+import qs from 'qs'
+import { Message } from 'element-ui'
+
+const apiRootPath = 'api/'
 
 // 拦截器
 axios.interceptors.response.use(response => {
@@ -32,9 +36,11 @@ function checkCode (res) {
     message: res.message
   }
   // 正常
-  if (res.code === 200 || res.code === 304) return result
+  if (res.code === 200 || res.code === 304) return result.data
 
   result.success = false
+
+  Message.error(result.message)
 
   // 错误类型返回不同信息
   // 如何处理
@@ -53,7 +59,16 @@ export default {
   },
 
   post (url, data) {
-    return axios.post(url, data)
+    return axios({
+      method: 'post',
+      url: apiRootPath + url,
+      data: qs.stringify(data),
+      // data,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
+    })
       .then(checkStatus)
       .then(checkCode)
   }

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {login} from '@/api/index'
+import { login } from '@/api/index'
 
 export default {
   data () {
@@ -35,8 +35,17 @@ export default {
 
   methods: {
     async login () {
+      // let { code, message } = await login(this.form)
       let userInfo = await login(this.form)
-      this.$message(userInfo.username + '&&' + userInfo.password)
+      // debugger
+      if (!userInfo.id) {
+        this.$message({
+          message: '账号或密码错误',
+          type: 'error'
+        })
+      } else {
+        window.location.href = '/'
+      }
     }
   }
 }
