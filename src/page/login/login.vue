@@ -8,7 +8,7 @@
         <el-input v-model="form.password" type="password" placeholder="密码"></el-input>
         <el-form-item class="submit-box">
           <el-button @click="login">登录</el-button>
-          <!-- <el-button @click="register">注册</el-button> -->
+          <el-button @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -44,8 +44,12 @@ export default {
           type: 'error'
         })
       } else {
-        window.location.href = '/'
+        this.$router.push('/')
       }
+    },
+
+    register () {
+      this.$router.push('register')
     }
   }
 }
