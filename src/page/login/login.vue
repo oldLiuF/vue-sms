@@ -15,7 +15,9 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+// import { login, accesstoken } from '@/api/user'
+import { accesstoken } from '@/api/user'
+import Cookies from 'js-cookie'
 
 export default {
   data () {
@@ -36,7 +38,7 @@ export default {
   methods: {
     async login () {
       // let { code, message } = await login(this.form)
-      let userInfo = await login(this.form)
+      /* let userInfo = await login(this.form)
       // debugger
       if (!userInfo.id) {
         this.$message({
@@ -45,6 +47,19 @@ export default {
         })
       } else {
         this.$router.push('/')
+      } */
+      let result = await accesstoken(this.form)
+      if (result.success) {
+        debugger
+        localStorage.setItem('token', result.token)
+        sessionStorage.setItem('token', result.token)
+        Cookies.set('token', result.token, { expires: 7 })
+        this.$router.push('/')
+      } else {
+        this.$message({
+          message: '账号或密码错误',
+          type: 'error'
+        })
       }
     },
 

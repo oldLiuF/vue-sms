@@ -1,18 +1,38 @@
 import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui'
+import Cookies from 'js-cookie'
 
 const apiRootPath = 'api/'
 
 // 拦截器
+axios.interceptors.request.use(config => {
+  let token = Cookies.get('token') || localStorage.getItem('token')
+  // 给请求头带上token
+  if (token) {
+    config.headers.Authorization = token
+  }
+  return config
+}, error => {
+  console.log(error)
+  return Promise.reject(error)
+})
+
 axios.interceptors.response.use(response => {
   return response
 }, error => {
   // 扶正错误
-  return Promise.resolve(error.response)
+  console.log('error:')
+  console.log(error)
+  Message({
+    message: error.message,
+    type: 'error',
+    duration: 5 * 1000
+  })
+  return Promise.reject(error.response)
 })
 
-// 处理来自网络或者服务器的错误
+/* // 处理来自网络或者服务器的错误
 function checkStatus (response) {
   let res = {
     code: response.status,
@@ -45,7 +65,7 @@ function checkCode (res) {
   // 错误类型返回不同信息
   // 如何处理
   return result
-}
+} */
 
 export default {
   get (url, params) {
@@ -53,9 +73,9 @@ export default {
       .then(checkStatus)
       .then(checkCode)
     return result */
-    return axios.get(url, params)
-      .then(checkStatus)
-      .then(checkCode)
+    return axios.get(apiRootPath + url, params)
+    // .then(checkStatus)
+    // .then(checkCode)
   },
 
   post (url, data) {
@@ -69,8 +89,8 @@ export default {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
       }
     })
-      .then(checkStatus)
-      .then(checkCode)
+    // .then(checkStatus)
+    // .then(checkCode)
   }
 }
 
