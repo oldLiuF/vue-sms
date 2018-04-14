@@ -12,24 +12,33 @@ Vue.config.productionTip = false
 
 Vue.use(elementUI)
 
+const whiteList = ['/login']
+
 router.beforeEach(async (to, from, next) => {
   // let token = Cookies.get('token')
   // let token = localStorage.getItem('token')
   let token = sessionStorage.getItem('token')
-  debugger
+
   if (token) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      next()
+      try {
+        let user = await getInfo()
+        console.log(user.username)
+        next()
+      } catch (e) {
+        debugger
+        console.log(e)
+      }
     }
-    let user = await getInfo()
-    console.log(user.username)
   } else {
-    if (to.path !== '/login') {
+    // 免验证白名单
+    if (whiteList.indexOf(to.path) !== -1) {
+      next()
+    } else {
       next({ path: '/login' })
     }
-    next()
   }
 })
 

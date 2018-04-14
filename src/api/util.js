@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import Cookies from 'js-cookie'
 
 const apiRootPath = 'api/'
@@ -19,16 +19,29 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  return response
+  return response.data
 }, error => {
-  // 扶正错误
   console.log('error:')
   console.log(error)
-  Message({
-    message: error.message,
-    type: 'error',
-    duration: 5 * 1000
-  })
+  debugger
+  let response = error.response
+  // 验证错误
+  if (response.data.code === 50001) {
+    MessageBox.alert('登录已过期, 请重新登录', '系统提示', {
+      callback: action => {
+        sessionStorage.removeItem('token')
+        localStorage.removeItem('token')
+        window.location.reload()
+      }
+    })
+  } else {
+    Message({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    })
+  }
+
   return Promise.reject(error.response)
 })
 
@@ -73,7 +86,9 @@ export default {
       .then(checkStatus)
       .then(checkCode)
     return result */
-    return axios.get(apiRootPath + url, params)
+    return axios.get(apiRootPath + url, params).catch(err => {
+      return new Error(err)
+    })
     // .then(checkStatus)
     // .then(checkCode)
   },
@@ -88,6 +103,8 @@ export default {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
       }
+    }).catch(err => {
+      return new Error(err)
     })
     // .then(checkStatus)
     // .then(checkCode)

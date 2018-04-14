@@ -49,6 +49,7 @@ export default {
         this.$router.push('/')
       } */
       let result = await accesstoken(this.form)
+      debugger
       if (result.success) {
         debugger
         localStorage.setItem('token', result.token)
