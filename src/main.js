@@ -28,7 +28,6 @@ router.beforeEach(async (to, from, next) => {
         console.log(user.username)
         next()
       } catch (e) {
-        debugger
         console.log(e)
       }
     }

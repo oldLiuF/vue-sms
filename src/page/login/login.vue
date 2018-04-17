@@ -49,9 +49,9 @@ export default {
         this.$router.push('/')
       } */
       let result = await accesstoken(this.form)
-      debugger
+      // debugger
       if (result.success) {
-        debugger
+        // debugger
         localStorage.setItem('token', result.token)
         sessionStorage.setItem('token', result.token)
         Cookies.set('token', result.token, { expires: 7 })

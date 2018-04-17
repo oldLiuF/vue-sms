@@ -23,12 +23,20 @@ axios.interceptors.response.use(response => {
 }, error => {
   console.log('error:')
   console.log(error)
-  debugger
   let response = error.response
   // 验证错误
-  if (response.data.code === 50001) {
+  debugger
+  if (response.status === 504) {
+    Message({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    })
+    return
+  } else if (response.data.code === 50001) {
     MessageBox.alert('登录已过期, 请重新登录', '系统提示', {
       callback: action => {
+        // 清除 token
         sessionStorage.removeItem('token')
         localStorage.removeItem('token')
         window.location.reload()
