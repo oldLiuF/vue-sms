@@ -10,7 +10,7 @@
             <el-submenu index="1">
               <template slot="title">test1</template>
               <el-menu-item index="1-1">
-                <router-link :to="list"></router-link>
+                <!-- <router-link>选项1</router-link> -->
               </el-menu-item>
               <el-menu-item index="1-2">选项2</el-menu-item>
               <el-menu-item index="1-3">选项3</el-menu-item>
